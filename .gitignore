@@ -1,0 +1,13 @@
+# IDE
+.idea
+.vscode
+
+# Python Environment
+.env 
+.venv
+
+# Python cache
+**/__pycache__/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
