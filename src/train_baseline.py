@@ -1,7 +1,7 @@
 from stable_baselines3 import PPO, DQN, A2C, SAC
 import gymnasium as gym
 
-from src.blackjack_wrapper import BlackjackWrapper
+from blackjack_wrapper import BlackjackWrapper
 from utils import load_config
 from stable_baselines3.common.callbacks import CheckpointCallback
 import os

@@ -4,7 +4,7 @@ import os
 import numpy as np
 from torch.utils.tensorboard import SummaryWriter
 
-from src.blackjack_wrapper import BlackjackWrapper
+from blackjack_wrapper import BlackjackWrapper
 
 
 def evaluate(model_path, env_id, episodes):
