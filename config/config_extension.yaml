@@ -1,4 +1,8 @@
-environment: "CartPole-v1"
+environment: "Blackjack-v1"
 algorithm: "DQN"
 timesteps: 200000
 checkpoint_freq: 10000
+
+hyperparameter_study:
+  param_name: "gamma"
+  values: [0.1, 0.5, 0.99] #0.1 cares mostly about the immediate next card, 0.5 should be balanced and 0.99 is the default

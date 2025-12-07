@@ -43,4 +43,4 @@ def evaluate(model_path, env_id, episodes):
     writer.close()
 
 if __name__ == '__main__':
-    evaluate("results/baseline/DQN_trial1.zip", "Blackjack-v1", episodes=1000)
+    evaluate("results/tuning/DQN_gamma_0.1", "Blackjack-v1", episodes=1000)
