@@ -15,3 +15,6 @@
 # May be temporary or to general for now.
 **/logs
 **/results
+
+# Radu's custom script for tensorboard
+./tensorboard.sh

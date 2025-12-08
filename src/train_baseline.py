@@ -20,7 +20,7 @@ def train_baseline(cfg_path="../config/config_baseline.yaml"):
         cb = CheckpointCallback(save_freq=cfg["checkpoint_freq"],
                                 save_path=f"logs/baseline/{cfg['algorithm']}_trial{trial}/checkpoints/")
         model.learn(total_timesteps=cfg["timesteps"], callback=cb)
-        model.save(f"results/baseline/{cfg['algorithm']}_trial{1}")
+        model.save(f"results/baseline/{cfg['algorithm']}_trial{trial}")
 
 
 if __name__ == '__main__': train_baseline()

@@ -12,5 +12,11 @@ class CustomRewardWrapper(RewardWrapper):
         """
         The reward parameter is the default reward
         """
-        # TODO: Implement your own reward
+        obs = self.env.unwrapped._get_obs()
+        player_sum, dealer_card, usable_ace = obs
+        
+        if player_sum > 21:
+            return -2.0 
+
+
         return reward
