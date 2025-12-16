@@ -20,7 +20,7 @@ def evaluate(model_path, env_id, episodes):
     wins = 0
     losses = 0
     draws = 0
-    
+
     # Track hitting on soft 11 or less
     times_at_soft_11_or_less = 0
     times_hit_at_soft_11_or_less = 0
@@ -35,7 +35,7 @@ def evaluate(model_path, env_id, episodes):
 
         while not (done or truncated):
             player_sum, dealer_card, usable_ace = obs
-            
+
             # Track if player is at 11 or less
             if player_sum <= 11:
                 times_at_soft_11_or_less += 1
@@ -45,18 +45,18 @@ def evaluate(model_path, env_id, episodes):
                     times_hit_at_soft_11_or_less += 1
             else:
                 action, _states = model.predict(obs, deterministic=True)
-            
+
             obs, reward, done, truncated, info = env.step(action)
             current_reward += reward
             episode_len += 1
-        
+
         all_rewards.append(current_reward)
-        
+
         # Get actual game result from Blackjack environment
         # Blackjack-v1 returns: player_sum, dealer_card, usable_ace in obs
         # We need to check the raw environment for actual win/loss
         actual_result = env.unwrapped._get_obs()
-        
+
         # Determine actual win/loss/draw from the episode result
         # In Blackjack: +1 = win, -1 = loss, 0 = draw
         if current_reward > 0:
@@ -72,13 +72,13 @@ def evaluate(model_path, env_id, episodes):
     win_rate = (wins / episodes) * 100
     loss_rate = (losses / episodes) * 100
     draw_rate = (draws / episodes) * 100
-    
+
     # Calculate hit rate on soft 11 or less
     hit_rate_soft_11_or_less = (times_hit_at_soft_11_or_less / times_at_soft_11_or_less * 100) if times_at_soft_11_or_less > 0 else 0
 
     mean_reward = np.mean(all_rewards)
     std_reward = np.std(all_rewards)
-    
+
     summary_text = (
         f"Mean Reward: {mean_reward:.3f} +/- {std_reward:.3f}\n"
         f"Win Rate: {win_rate:.1f}%\n"
@@ -88,10 +88,9 @@ def evaluate(model_path, env_id, episodes):
     )
 
     writer.add_text("eval/summary", summary_text, 0)
-    
+
     env.close()
     writer.close()
 
 if __name__ == '__main__':
-    evaluate("results/custom/DQN_-2_for_busting.zip", "Blackjack-v1", episodes=1000)
-
+    evaluate("results/tuning/DQN_gamma_0.1", "Blackjack-v1", episodes=1000)
