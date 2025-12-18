@@ -1,3 +1,11 @@
+# Changes to make so Alexander's tests pass
+- Config path should assume code runs from the root of the project (cfg_path should be config/* not ../config/*)
+- Make sure code runs and the results come from the code and are not fabricated (The results shown in the report)
+- The grade is based only on the report so no code quality changes are needed
+- Make the reward function more complex
+- He will look at the timestamps of the logs and that they exist the tests will not check for that
+- Use os package to force the correct package level
+
 # Baseline
 
 ## First try with DQN:

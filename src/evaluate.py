@@ -8,20 +8,18 @@ from blackjack_wrapper import BlackjackWrapper
 
 
 def evaluate(model_path, env_id, episodes):
-    filename = os.path.basename(model_path)
-    run_name = os.path.splitext(filename)[0]
     model = DQN.load(model_path)
     env = BlackjackWrapper(gym.make(env_id, render_mode=None))
 
-    log_path = os.path.join("logs", "evaluate", run_name)
+    model_dir = os.path.basename(os.path.dirname(model_path))
+    filename = os.path.basename(model_path)
+    log_path = os.path.join("logs",model_dir, filename, "evaluate")
     writer = SummaryWriter(log_dir=log_path)
 
     all_rewards = []
     wins = 0
     losses = 0
     draws = 0
-
-    # Track hitting on soft 11 or less
     times_at_soft_11_or_less = 0
     times_hit_at_soft_11_or_less = 0
 
@@ -91,6 +89,3 @@ def evaluate(model_path, env_id, episodes):
 
     env.close()
     writer.close()
-
-if __name__ == '__main__':
-    evaluate("results/tuning/DQN_gamma_0.1", "Blackjack-v1", episodes=1000)
