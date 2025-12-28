@@ -1,14 +1,15 @@
 import os
 
 from stable_baselines3 import DQN
-
+from evaluate import evaluate
 from src.blackjack_wrapper import BlackjackWrapper
 from utils import load_config
 import gymnasium as gym
 from stable_baselines3.common.callbacks import CheckpointCallback
+from pathlib import Path
 
-
-def train_extension(cfg_path="../config/config_extension.yaml"):
+def train_extension(cfg_path="config/config_extension.yaml"):
+    os.chdir(Path(__file__).parent.parent.resolve())
     cfg = load_config(cfg_path)
 
     param = cfg['hyperparameter_study']['param_name']
@@ -17,12 +18,11 @@ def train_extension(cfg_path="../config/config_extension.yaml"):
     for value in values:
         env = BlackjackWrapper(gym.make(cfg['environment'], render_mode=None))
         run_name = f"{cfg['algorithm']}_{param}_{value}"
-        save_path = f"results/tuning/{run_name}"
+        model_save_path = f"results/tuning/{run_name}"
         log_path = f"logs/tuning/{run_name}/"
         checkpoint_path = f"logs/tuning/{run_name}/checkpoints/"
 
-        os.makedirs(checkpoint_path, exist_ok=True)
-        os.makedirs(os.path.dirname(save_path), exist_ok=True)
+        os.makedirs(os.path.dirname(model_save_path), exist_ok=True)
 
         checkpoint_callback = CheckpointCallback(
             save_freq=cfg["checkpoint_freq"],
@@ -41,8 +41,10 @@ def train_extension(cfg_path="../config/config_extension.yaml"):
         )
 
         model.learn(total_timesteps=cfg["timesteps"], callback=checkpoint_callback)
-        model.save(save_path)
+        model.save(model_save_path)
         env.close()
+
+        evaluate(model_save_path, cfg['environment'], 1000)
 
 
 if __name__ == '__main__': train_extension()

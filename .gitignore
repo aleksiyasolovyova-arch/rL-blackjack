@@ -11,7 +11,3 @@
 
 # Jupyter Notebook checkpoints
 .ipynb_checkpoints
-
-# May be temporary or to general for now.
-**/logs
-**/results
