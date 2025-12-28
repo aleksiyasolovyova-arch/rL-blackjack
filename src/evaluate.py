@@ -29,16 +29,13 @@ def evaluate(model_path, env_id, episodes):
         truncated = False
         current_reward = 0
         episode_len = 0
-        episode_result = None
 
         while not (done or truncated):
             player_sum, dealer_card, usable_ace = obs
 
-            # Track if player is at 11 or less
             if player_sum <= 11:
                 times_at_soft_11_or_less += 1
                 action, _states = model.predict(obs, deterministic=True)
-                # action 1 = hit, action 0 = stand
                 if action == 1:
                     times_hit_at_soft_11_or_less += 1
             else:
@@ -50,13 +47,6 @@ def evaluate(model_path, env_id, episodes):
 
         all_rewards.append(current_reward)
 
-        # Get actual game result from Blackjack environment
-        # Blackjack-v1 returns: player_sum, dealer_card, usable_ace in obs
-        # We need to check the raw environment for actual win/loss
-        actual_result = env.unwrapped._get_obs()
-
-        # Determine actual win/loss/draw from the episode result
-        # In Blackjack: +1 = win, -1 = loss, 0 = draw
         if current_reward > 0:
             wins += 1
         elif current_reward < 0:
@@ -71,7 +61,6 @@ def evaluate(model_path, env_id, episodes):
     loss_rate = (losses / episodes) * 100
     draw_rate = (draws / episodes) * 100
 
-    # Calculate hit rate on soft 11 or less
     hit_rate_soft_11_or_less = (times_hit_at_soft_11_or_less / times_at_soft_11_or_less * 100) if times_at_soft_11_or_less > 0 else 0
 
     mean_reward = np.mean(all_rewards)
