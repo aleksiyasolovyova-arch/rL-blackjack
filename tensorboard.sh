@@ -1,4 +1,2 @@
 #!/bin/bash
-LOG_DIR=/home/radu/reinforcement-learning/rl-project/logs
-
-tensorboard --logdir $LOG_DIR
+tensorboard --logdir "$1/logs"

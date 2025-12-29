@@ -1,8 +1,9 @@
 import os
 
+from custom_env_wrapper import CustomRewardWrapper
 from stable_baselines3 import DQN
 from evaluate import evaluate
-from src.blackjack_wrapper import BlackjackWrapper
+from blackjack_wrapper import BlackjackWrapper
 from utils import load_config
 import gymnasium as gym
 from stable_baselines3.common.callbacks import CheckpointCallback
@@ -16,7 +17,7 @@ def train_extension(cfg_path="config/config_extension.yaml"):
     values = cfg['hyperparameter_study']['values']
 
     for value in values:
-        env = BlackjackWrapper(gym.make(cfg['environment'], render_mode=None))
+        env = CustomRewardWrapper(BlackjackWrapper(gym.make(cfg['environment'], render_mode=None)),cfg)
         run_name = f"{cfg['algorithm']}_{param}_{value}"
         model_save_path = f"results/tuning/{run_name}"
         log_path = f"logs/tuning/{run_name}/"

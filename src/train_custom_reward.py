@@ -11,23 +11,23 @@ from pathlib import Path
 def train_custom(cfg_path="config/config_custom.yaml"):
     os.chdir(Path(__file__).parent.parent.resolve())
     cfg = load_config(cfg_path)
-    name = cfg['name']
 
-    env = CustomRewardWrapper(BlackjackWrapper(gym.make(cfg['environment'], render_mode=None)),cfg)
-    algo =  globals()[cfg['algorithm']]
+    for trial in range(1, cfg['num_trials'] + 1):
+        env = CustomRewardWrapper(BlackjackWrapper(gym.make(cfg['environment'], render_mode=None)),cfg)
+        algo =  globals()[cfg['algorithm']]
 
-    trial_name = f"{cfg['algorithm']}_{name}"
-    log_dir = f"logs/custom/{trial_name}"
-    checkpoint_dir = f"{log_dir}/checkpoints/"
-    model_save_path = f"results/custom/{trial_name}"
-    os.makedirs(log_dir, exist_ok=True)
+        trial_name = f"{cfg['algorithm']}_trial{trial}"
+        log_dir = f"logs/custom/{trial_name}"
+        checkpoint_dir = f"{log_dir}/checkpoints/"
+        model_save_path = f"results/custom/{trial_name}"
+        os.makedirs(log_dir, exist_ok=True)
 
-    model = algo("MlpPolicy", env, verbose=1, tensorboard_log=f"{log_dir}/")
-    cb = CheckpointCallback(save_freq=cfg["checkpoint_freq"],
+        model = algo("MlpPolicy", env, verbose=1, tensorboard_log=f"{log_dir}/")
+        cb = CheckpointCallback(save_freq=cfg["checkpoint_freq"],
                                 save_path=checkpoint_dir,)
-    model.learn(total_timesteps=cfg["timesteps"], callback=cb)
-    model.save(model_save_path)
+        model.learn(total_timesteps=cfg["timesteps"], callback=cb)
+        model.save(model_save_path)
 
-    evaluate(model_save_path, cfg['environment'], 1000)
+        evaluate(model_save_path, cfg['environment'], 1000)
 
 if __name__ == '__main__': train_custom()

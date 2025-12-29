@@ -2,4 +2,4 @@ environment: "Blackjack-v1"
 algorithm: "DQN"
 timesteps: 200000
 checkpoint_freq: 10000
-name: "potential-based"
+num_trials: 3
